@@ -2,7 +2,6 @@ import BottomSheets from "@/components/common/BottomSheets";
 import { DrawerTrigger } from "@/components/ui/drawer";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Plus } from "lucide-react";
-import { useState } from "react";
 import CreateTodoContent from "../components/contents/bottomSheets/CreateTodoContent";
 
 const meta: Meta<typeof BottomSheets> = {
@@ -19,8 +18,6 @@ type Story = StoryObj<typeof BottomSheets>;
 export const BottomSheet: Story = {
   args: {},
   render: function Render() {
-    const [open, setOpen] = useState(false);
-
     return (
       <>
         <BottomSheets
