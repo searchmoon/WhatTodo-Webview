@@ -7,6 +7,8 @@ import { DrawerTrigger } from "../ui/drawer";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { formatGetDateLabel } from "@/util/format";
+import { DatePicker } from "./DatePicker";
+import { useCalendarStore } from "@/store/useCalendarStore";
 
 dayjs.locale("ko");
 
@@ -19,6 +21,7 @@ export default function Main() {
   }, []);
 
   const { todoList, setTodoList } = useTodoStore();
+  const { selectedDate, setSelectedDate } = useCalendarStore();
 
   const sortedTodos = useMemo(
     () =>
@@ -37,21 +40,33 @@ export default function Main() {
     },
     {}
   );
+  console.log(groupedByDate);
+  const formatSelectedDate = dayjs(selectedDate).format("YYYY-MM-DD");
+  console.log(formatSelectedDate);
 
   return (
-    <div className="w-full h-full relative">
-      {Object.entries(groupedByDate).map(([date, todos]) => (
-        <div key={date}>
-          <div>{formatGetDateLabel(date)}</div>
-          <ul className="space-y-2">
-            {todos.map((todo) => (
-              <li key={todo.id} className="p-2 bg-gray-50 rounded shadow-sm">
-                {todo.todo}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className="w-full h-full relative ">
+      <DatePicker />
+      <div className="w-full h-[calc(100vh-170px)] overflow-y-scroll">
+        {Object.entries(groupedByDate).map(([date, todos]) => {
+          console.log(date);
+          return (
+            <div key={date} className="mb-4">
+              <div>{formatGetDateLabel(date)}</div>
+              <ul className="space-y-2">
+                {todos.map((todo) => (
+                  <li
+                    key={todo.id}
+                    className="p-2 bg-gray-50 rounded shadow-sm"
+                  >
+                    {todo.todo}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
       <BottomSheets
         drawTrigger={
           <DrawerTrigger className="bg-gray-400 p-1 rounded-full absolute bottom-0 right-0 cursor-pointer">
