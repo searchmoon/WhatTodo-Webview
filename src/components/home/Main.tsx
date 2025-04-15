@@ -21,7 +21,7 @@ export default function Main() {
   }, []);
 
   const { todoList, setTodoList } = useTodoStore();
-  const { selectedDate, setSelectedDate } = useCalendarStore();
+  const { selectedDate } = useCalendarStore();
 
   const sortedTodos = useMemo(
     () =>
