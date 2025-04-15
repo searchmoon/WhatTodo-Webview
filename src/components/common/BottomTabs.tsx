@@ -24,7 +24,7 @@ export default function BottomTabs({
       defaultValue={tabsOption[0]?.value}
       onValueChange={(value) => setActiveTab(value)}
       value={activeTab}
-      className="border-grayScale02 mx-4 mt-[7px] mb-[34px] w-[500px] flex-col border-t"
+      className="border-grayScale02 mx-4 mt-[7px] mb-[16px] w-[500px] flex-col border-t"
       {...props}
     >
       <TabsList className="w-full">

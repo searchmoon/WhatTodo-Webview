@@ -2,8 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { House } from "lucide-react";
 import { Plus } from "lucide-react";
-
-import BottomTabs from "./BottomTabs";
+import BottomTabs from "@/components/common/BottomTabs";
 
 const meta: Meta<typeof BottomTabs> = {
   title: "Components/BottomTabs",
@@ -35,18 +34,6 @@ const tabsOption = [
     value: "plus",
     icon: <Plus className={iconStyle} />,
     activeIcon: <Plus className={iconStyle} />,
-    label: "프로필",
-  },
-  {
-    value: "plus",
-    icon: <Plus className={iconStyle} />,
-    activeIcon: <Plus color="red" className={iconStyle} />,
-    label: "프로필",
-  },
-  {
-    value: "plus",
-    icon: <Plus className={iconStyle} />,
-    activeIcon: <Plus color="red" className={iconStyle} />,
     label: "프로필",
   },
 ];
