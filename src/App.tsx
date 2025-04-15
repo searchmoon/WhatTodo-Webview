@@ -1,8 +1,17 @@
 import Main from "./components/home/Main";
-import "../src/index.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
 
 function App() {
-  return <Main />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Main />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

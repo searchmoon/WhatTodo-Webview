@@ -6,6 +6,11 @@ export default {
   ],
   darkMode: "class", //또는 "media"
   theme: {
-    extend: {},
+    extend: {
+      zIndex: {
+        100: "100",
+        999: "999",
+      },
+    },
   },
 };
