@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { useTodoStore } from "@/store/useTodoStore";
 import dayjs from "dayjs";
 
-const TodoInput = () => {
+const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
   const { todoList, setTodoList } = useTodoStore();
 
   const [newTodo, setNewTodo] = useState({
@@ -30,6 +30,7 @@ const TodoInput = () => {
         "todoList",
         JSON.stringify([...todoList, { ...newTodo, id: Date.now() }])
       );
+      onClose();
     } else {
       alert("할일을 작성해 주세요.");
     }
@@ -112,4 +113,4 @@ const TodoInput = () => {
   );
 };
 
-export default TodoInput;
+export default CreateTodoContent;

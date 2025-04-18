@@ -45,7 +45,7 @@ export default function Main() {
   console.log(formatSelectedDate);
 
   return (
-    <div className="w-full h-full relative ">
+    <div className="w-full h-full relative">
       <DatePicker />
       <div className="w-full h-[calc(100vh-170px)] overflow-y-scroll">
         {Object.entries(groupedByDate).map(([date, todos]) => {
@@ -73,7 +73,7 @@ export default function Main() {
             <Plus color="#fff" size={24} />
           </DrawerTrigger>
         }
-        drawerContent={<CreateTodoContent />}
+        drawerContent={(onClose) => <CreateTodoContent onClose={onClose} />}
       />
     </div>
   );
