@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Plus } from "lucide-react";
 import CreateTodoContent from "../contents/bottomSheets/CreateTodoContent";
 import { TodoState, useTodoStore } from "@/store/useTodoStore";
@@ -22,6 +22,7 @@ export default function Main() {
 
   const { todoList, setTodoList } = useTodoStore();
   const { selectedDate } = useCalendarStore();
+  const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const sortedTodos = useMemo(
     () =>
@@ -44,6 +45,17 @@ export default function Main() {
   const formatSelectedDate = dayjs(selectedDate).format("YYYY-MM-DD");
   console.log(formatSelectedDate);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const target = dateRef.current[formatSelectedDate];
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [formatSelectedDate]);
+
   return (
     <div className="w-full h-full relative">
       <DatePicker />
@@ -51,7 +63,13 @@ export default function Main() {
         {Object.entries(groupedByDate).map(([date, todos]) => {
           console.log(date);
           return (
-            <div key={date} className="mb-4">
+            <div
+              key={date}
+              ref={(el) => {
+                dateRef.current[date] = el;
+              }}
+              className="mb-4"
+            >
               <div>{formatGetDateLabel(date)}</div>
               <ul className="space-y-2">
                 {todos.map((todo) => (
