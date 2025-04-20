@@ -28,7 +28,7 @@ export const BottomSheet: Story = {
               </button>
             </DrawerTrigger>
           }
-          drawerContent={<CreateTodoContent />}
+          drawerContent={(onClose) => <CreateTodoContent onClose={onClose} />}
         />
       </>
     );

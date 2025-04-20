@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus } from "lucide-react";
 import CreateTodoContent from "../contents/bottomSheets/CreateTodoContent";
 import { TodoState, useTodoStore } from "@/store/useTodoStore";
@@ -45,23 +45,46 @@ export default function Main() {
   const formatSelectedDate = dayjs(selectedDate).format("YYYY-MM-DD");
   console.log(formatSelectedDate);
 
+  const [highlightedDate, setHighlightedDate] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const [noContentMsg, setNoContentMsg] = useState<string>("");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const target = dateRef.current[formatSelectedDate];
       if (target) {
+        // 캘린더에서 날짜 선택 시, 세로 스크롤 해당 위치로 이동.
         target.scrollIntoView({ behavior: "smooth", block: "start" });
+        // 선택된 date 의 상태만 true 로 변경해주기
+        setHighlightedDate({ [formatSelectedDate]: true });
+        setNoContentMsg("");
+      } else {
+        setNoContentMsg(`${formatSelectedDate} 에는 등록된 일정이 없습니다.`);
       }
     }, 50);
 
     return () => clearTimeout(timer);
   }, [formatSelectedDate]);
 
+  // 메시지 몇초 후 자동 제거
+  useEffect(() => {
+    if (noContentMsg) {
+      const msgTimer = setTimeout(() => {
+        setNoContentMsg("");
+      }, 1200);
+
+      return () => clearTimeout(msgTimer);
+    }
+  }, [noContentMsg]); // noContentMsg가 변경될 때마다 실행
+
   return (
     <div className="w-full h-full relative">
       <DatePicker />
+      {noContentMsg && <div>{noContentMsg}</div>}
       <div className="w-full h-[calc(100vh-170px)] overflow-y-scroll">
         {Object.entries(groupedByDate).map(([date, todos]) => {
-          console.log(date);
           return (
             <div
               key={date}
@@ -70,7 +93,14 @@ export default function Main() {
               }}
               className="mb-4"
             >
-              <div>{formatGetDateLabel(date)}</div>
+              <div
+                className={`p-1 rounded-sm mb-1 transition-colors duration-700 ${
+                  highlightedDate[date] ? "bg-gray-200 shake" : ""
+                }
+                  `}
+              >
+                {formatGetDateLabel(date)}
+              </div>
               <ul className="space-y-2">
                 {todos.map((todo) => (
                   <li

@@ -3,12 +3,12 @@ import dayjs from "dayjs";
 export const formatGetDateLabel = (dateStr: string) => {
   const target = dayjs(dateStr).startOf("day");
   const today = dayjs().startOf("day");
-
   const diff = target.diff(today, "day");
+  const formattedDate = target.format("YY년 M월 D일 (dd)");
 
-  if (diff === 0) return "오늘";
-  if (diff === -1) return "어제";
-  if (diff === 1) return "내일";
+  if (diff === -1) return `${formattedDate} - 어제`;
+  if (diff === 0) return `${formattedDate} - 오늘`;
+  if (diff === 1) return `${formattedDate} - 내일`;
 
-  return target.format("YY년 M월 D일 (dd)");
+  return formattedDate;
 };
