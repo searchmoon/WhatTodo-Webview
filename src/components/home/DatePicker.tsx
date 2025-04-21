@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { useCalendarStore } from "@/store/useCalendarStore";
 
 export function DatePicker() {
-  // 초기 날짜를 오늘 날짜로 설정
   const { selectedDate, setSelectedDate } = useCalendarStore();
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,6 +32,7 @@ export function DatePicker() {
     const prev = new Date(currentMonth);
     prev.setMonth(prev.getMonth() - 1);
     setCurrentMonth(prev);
+    setSelectedDate(startOfMonth(prev));
   };
 
   // 다음 달로 이동
@@ -40,6 +40,7 @@ export function DatePicker() {
     const next = new Date(currentMonth);
     next.setMonth(next.getMonth() + 1);
     setCurrentMonth(next);
+    setSelectedDate(startOfMonth(next));
   };
 
   // 날짜가 선택된 날짜와 같은지 확인 (선택된 날짜가 없으면 오늘 날짜 사용)
