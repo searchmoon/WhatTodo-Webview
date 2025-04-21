@@ -13,16 +13,16 @@ import { useCalendarStore } from "@/store/useCalendarStore";
 dayjs.locale("ko");
 
 export default function Main() {
+  const { todoList, setTodoList } = useTodoStore();
+  const { selectedDate } = useCalendarStore();
+  const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
   useEffect(() => {
     const savedTodo = localStorage.getItem("todoList");
     if (savedTodo) {
       setTodoList(JSON.parse(savedTodo));
     }
   }, []);
-
-  const { todoList, setTodoList } = useTodoStore();
-  const { selectedDate } = useCalendarStore();
-  const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const sortedTodos = useMemo(
     () =>
@@ -35,15 +35,18 @@ export default function Main() {
   const groupedByDate = sortedTodos.reduce(
     (acc: { [key: string]: TodoState[] }, todo) => {
       const dateKey = dayjs(todo.date).format("YYYY-MM-DD");
-      if (!acc[dateKey]) acc[dateKey] = [];
-      acc[dateKey].push(todo);
+      const selectedDateMonth = dayjs(selectedDate).format("YYYY-MM");
+      const dateKeyMonth = dayjs(todo.date).format("YYYY-MM");
+      if (!acc[dateKey] && selectedDateMonth === dateKeyMonth)
+        acc[dateKey] = [];
+      if (selectedDateMonth === dateKeyMonth) acc[dateKey].push(todo);
+
       return acc;
     },
     {}
   );
-  console.log(groupedByDate);
+
   const formatSelectedDate = dayjs(selectedDate).format("YYYY-MM-DD");
-  console.log(formatSelectedDate);
 
   const [highlightedDate, setHighlightedDate] = useState<{
     [key: string]: boolean;
@@ -61,6 +64,7 @@ export default function Main() {
         setHighlightedDate({ [formatSelectedDate]: true });
         setNoContentMsg("");
       } else {
+        setHighlightedDate({ [formatSelectedDate]: false });
         setNoContentMsg(`${formatSelectedDate} 에는 등록된 일정이 없습니다.`);
       }
     }, 50);
