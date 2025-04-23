@@ -10,17 +10,18 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { useTodoStore } from "@/store/useTodoStore";
+import { TodoState, useTodoStore } from "@/store/useTodoStore";
 import dayjs from "dayjs";
 
 const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
   const { todoList, setTodoList } = useTodoStore();
 
-  const [newTodo, setNewTodo] = useState({
+  const [newTodo, setNewTodo] = useState<TodoState>({
     todo: "",
     date: new Date(),
     carryOver: true,
-    id: null,
+    id: 0,
+    complete: false,
   });
 
   const handleCreateTodo = () => {

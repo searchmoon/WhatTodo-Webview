@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import CreateTodoContent from "../contents/bottomSheets/CreateTodoContent";
 import { TodoState, useTodoStore } from "@/store/useTodoStore";
 import BottomSheets from "../common/BottomSheets";
@@ -9,6 +9,7 @@ import "dayjs/locale/ko";
 import { formatGetDateLabel } from "@/util/format";
 import { DatePicker } from "./DatePicker";
 import { useCalendarStore } from "@/store/useCalendarStore";
+import { cn } from "@/lib/utils";
 
 dayjs.locale("ko");
 
@@ -83,6 +84,16 @@ export default function Main() {
     }
   }, [noContentMsg]); // noContentMsg가 변경될 때마다 실행
 
+  const handleClickTodo = (todoId: number) => {
+    const newTodoList = todoList.map((todo) =>
+      todo.id === todoId ? { ...todo, complete: !todo.complete } : todo
+    );
+
+    setTodoList(newTodoList);
+
+    localStorage.setItem("todoList", JSON.stringify(newTodoList));
+  };
+
   return (
     <div className="w-full h-full relative">
       <DatePicker />
@@ -109,9 +120,18 @@ export default function Main() {
                 {todos.map((todo) => (
                   <li
                     key={todo.id}
-                    className="p-2 bg-gray-50 rounded shadow-sm"
+                    className={cn(
+                      "px-3 py-1 bg-gray-50 rounded shadow-sm",
+                      todo.complete ? "line-through text-gray-400" : ""
+                    )}
+                    onClick={() => handleClickTodo(todo.id)}
                   >
-                    {todo.todo}
+                    <div className="flex items-center justify-between">
+                      <p className="flex items-center gap-2">
+                        {todo.complete && <Check size="16" />}
+                        {todo.todo}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ul>

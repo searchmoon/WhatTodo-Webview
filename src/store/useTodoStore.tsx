@@ -5,6 +5,7 @@ export interface TodoState {
   date: Date;
   carryOver: boolean;
   id: number;
+  complete: boolean;
 }
 
 interface TodoStore {
