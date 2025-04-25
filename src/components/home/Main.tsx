@@ -10,6 +10,7 @@ import { formatGetDateLabel } from "@/util/format";
 import { DatePicker } from "./DatePicker";
 import { useCalendarStore } from "@/store/useCalendarStore";
 import { cn } from "@/lib/utils";
+import { useLongPress } from "../../hooks/useLongPress";
 
 dayjs.locale("ko");
 
@@ -117,23 +118,34 @@ export default function Main() {
                 {formatGetDateLabel(date)}
               </div>
               <ul className="space-y-2">
-                {todos.map((todo) => (
-                  <li
-                    key={todo.id}
-                    className={cn(
-                      "px-3 py-1 bg-gray-50 rounded shadow-sm",
-                      todo.complete ? "line-through text-gray-400" : ""
-                    )}
-                    onClick={() => handleClickTodo(todo.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="flex items-center gap-2">
-                        {todo.complete && <Check size="16" />}
+                {todos.map((todo) => {
+                  const longPressEvent = useLongPress({
+                    onLongPress: () => {
+                      console.log("long press!!!", todo.id);
+                    },
+                    onClick: () => {
+                      console.log("just click!!!", todo.id);
+                      handleClickTodo(todo.id);
+                    },
+                    delay: 500,
+                  });
+
+                  return (
+                    <li
+                      key={todo.id}
+                      className={cn(
+                        "px-3 py-1 bg-gray-50 rounded shadow-sm",
+                        todo.complete ? "line-through text-gray-400" : ""
+                      )}
+                      {...longPressEvent}
+                    >
+                      <p className="flex items-center justify-between">
                         {todo.todo}
+                        {todo.complete && <Check size="16" />}
                       </p>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           );
