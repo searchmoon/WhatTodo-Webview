@@ -14,26 +14,38 @@ export const useLongPress = ({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isLongPressRef = useRef(false);
 
-  const startPress = useCallback(() => {
-    isLongPressRef.current = false;
-    timerRef.current = setTimeout(() => {
-      onLongPress();
-      isLongPressRef.current = true;
-    }, delay);
-  }, [onLongPress, delay]);
+  const startPress = useCallback(
+    (e: React.TouchEvent | React.MouseEvent) => {
+      e.preventDefault();
 
-  const endPress = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
+      isLongPressRef.current = false;
+      timerRef.current = setTimeout(() => {
+        onLongPress();
+        isLongPressRef.current = true;
+      }, delay);
+    },
+    [onLongPress, delay]
+  );
 
-    if (!isLongPressRef.current && onClick) {
-      onClick();
-    }
-  }, [onClick]);
+  const endPress = useCallback(
+    (e: React.TouchEvent | React.MouseEvent) => {
+      e.preventDefault();
 
-  const cancelPress = useCallback(() => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+
+      if (!isLongPressRef.current && onClick) {
+        onClick();
+      }
+    },
+    [onClick]
+  );
+
+  const cancelPress = useCallback((e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault();
+
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;

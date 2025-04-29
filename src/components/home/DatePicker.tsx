@@ -145,7 +145,7 @@ export function DatePicker() {
 
       <div
         ref={containerRef}
-        className="overflow-x-auto pb-2 scrollbar-hide"
+        className="overflow-x-auto scrollbar-hide"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <div ref={daysContainerRef} className="flex space-x-1 min-w-max px-4">
