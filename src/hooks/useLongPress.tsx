@@ -3,7 +3,7 @@ import { useRef, useCallback } from "react";
 interface UseLongPressOptions {
   delay?: number;
   onLongPress: () => void;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
 }
 
 export const useLongPress = ({
@@ -35,9 +35,8 @@ export const useLongPress = ({
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
-
       if (!isLongPressRef.current && onClick) {
-        onClick();
+        onClick(e as React.MouseEvent);
       }
     },
     [onClick]

@@ -1,16 +1,13 @@
-// import { useLongPress } from "@/hooks/useLongPress";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/store/useCalendarStore";
 import { TodoState, useTodoStore } from "@/store/useTodoStore";
 import { formatGetDateLabel } from "@/util/format";
 import dayjs from "dayjs";
-import { Check } from "lucide-react";
+import { Check, PencilLine, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LongPressWrapper from "../common/LongPressWrapper";
 
-export default function TodoList({}: {
-  highlightedDate: { [key: string]: boolean };
-}) {
+export default function TodoList() {
   const { todoList, setTodoList } = useTodoStore();
   const { selectedDate } = useCalendarStore();
   const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -63,19 +60,57 @@ export default function TodoList({}: {
     return () => clearTimeout(timer);
   }, [formatSelectedDate]);
 
+  // 메시지 몇초 후 자동 제거
+  useEffect(() => {
+    if (noContentMsg) {
+      const msgTimer = setTimeout(() => {
+        setNoContentMsg("");
+      }, 1200);
+
+      return () => clearTimeout(msgTimer);
+    }
+  }, [noContentMsg]); // noContentMsg가 변경될 때마다 실행
+
   const handleClickTodo = (todoId: number) => {
     const newTodoList = todoList.map((todo) =>
       todo.id === todoId ? { ...todo, complete: !todo.complete } : todo
     );
 
     setTodoList(newTodoList);
+    setSelectedTodo(null);
 
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
 
+  const [selectedTodo, setSelectedTodo] = useState<TodoState | null>();
+
+  const handlePressTodo = (todo: TodoState) => {
+    if (selectedTodo === todo) {
+      setSelectedTodo(null);
+    } else {
+      setSelectedTodo(todo);
+    }
+  };
+
+  const handleDeleteTodo = (todoId: number) => {
+    const newTodoList = todoList.filter((item) => item.id !== todoId);
+    console.log(newTodoList);
+    setTodoList(newTodoList);
+    localStorage.setItem("todoList", JSON.stringify(newTodoList));
+  };
+  //   const handleUpdateTodo = (todoId: number) => {};
+
   return (
     <div className="w-full h-[calc(100vh-170px)] overflow-y-scroll">
-      {noContentMsg && <div>{noContentMsg}</div>}
+      <div className="h-5">
+        <p
+          className={`text-center py-[2px] my-1 rounded-sm text-sm text-white transition-colors duration-700 ${
+            noContentMsg ? "bg-gray-400" : "opacity-0 "
+          }`}
+        >
+          {noContentMsg}
+        </p>
+      </div>
 
       {Object.entries(groupedByDate).map(([date, todos]) => {
         return (
@@ -98,8 +133,12 @@ export default function TodoList({}: {
               {todos.map((todo) => (
                 <LongPressWrapper
                   key={todo.id}
-                  onLongPress={() => console.log("long press!!!", todo.id)}
-                  onClick={() => handleClickTodo(todo.id)}
+                  onLongPress={() => handlePressTodo(todo)}
+                  onClick={(e) => {
+                    handleClickTodo(todo.id);
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
                 >
                   <li
                     key={todo.id}
@@ -110,9 +149,33 @@ export default function TodoList({}: {
                   >
                     <div className="flex items-center justify-between">
                       {todo.todo}
-                      <div className="min-w-4">
-                        {todo.complete && <Check size="16" />}
-                      </div>
+                      {selectedTodo?.id === todo.id ? (
+                        <div className="flex items-center text-gray-400">
+                          <button
+                            className="p-[2px]"
+                            onClick={(e: React.MouseEvent) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDeleteTodo(todo.id);
+                            }}
+                          >
+                            <Trash2 size="16" />
+                          </button>
+                          <button
+                            className="p-[2px]"
+                            onClick={() => {
+                              //   stopPropagation();
+                              //   handleUpdateTodo(todo.id);
+                            }}
+                          >
+                            <PencilLine size="16" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="min-w-4">
+                          {todo.complete && <Check size="16" />}
+                        </div>
+                      )}
                     </div>
                   </li>
                 </LongPressWrapper>

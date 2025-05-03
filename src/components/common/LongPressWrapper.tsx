@@ -3,7 +3,7 @@ import { useLongPress } from "@/hooks/useLongPress";
 
 interface LongPressWrapperProps {
   onLongPress: () => void;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   children: ReactNode;
 }
 

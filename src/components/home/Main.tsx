@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Plus } from "lucide-react";
 import CreateTodoContent from "../contents/bottomSheets/CreateTodoContent";
 import { useTodoStore } from "@/store/useTodoStore";
@@ -7,7 +7,6 @@ import { DrawerTrigger } from "../ui/drawer";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { DatePicker } from "./DatePicker";
-import { useCalendarStore } from "@/store/useCalendarStore";
 import TodoList from "./TodoList";
 
 dayjs.locale("ko");
