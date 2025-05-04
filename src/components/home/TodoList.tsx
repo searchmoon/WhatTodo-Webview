@@ -98,7 +98,9 @@ export default function TodoList() {
     setTodoList(newTodoList);
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
-  //   const handleUpdateTodo = (todoId: number) => {};
+  const handleUpdateTodo = (todoId: number) => {
+    console.log(todoId);
+  };
 
   return (
     <div className="w-full h-[calc(100vh-170px)] overflow-y-scroll">
@@ -134,11 +136,7 @@ export default function TodoList() {
                 <LongPressWrapper
                   key={todo.id}
                   onLongPress={() => handlePressTodo(todo)}
-                  onClick={(e) => {
-                    handleClickTodo(todo.id);
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
+                  onClick={() => handleClickTodo(todo.id)}
                 >
                   <li
                     key={todo.id}
@@ -153,20 +151,13 @@ export default function TodoList() {
                         <div className="flex items-center text-gray-400">
                           <button
                             className="p-[2px]"
-                            onClick={(e: React.MouseEvent) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleDeleteTodo(todo.id);
-                            }}
+                            onClick={() => handleDeleteTodo(todo.id)}
                           >
                             <Trash2 size="16" />
                           </button>
                           <button
                             className="p-[2px]"
-                            onClick={() => {
-                              //   stopPropagation();
-                              //   handleUpdateTodo(todo.id);
-                            }}
+                            onClick={() => handleUpdateTodo(todo.id)}
                           >
                             <PencilLine size="16" />
                           </button>

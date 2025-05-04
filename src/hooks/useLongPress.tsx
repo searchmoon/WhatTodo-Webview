@@ -14,10 +14,24 @@ export const useLongPress = ({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isLongPressRef = useRef(false);
 
+  const isInteractiveElement = (e: any) => {
+    const target = e.target as HTMLElement;
+
+    return (
+      // 이런 요소일때 해당 이벤트는 무시하고 빠져나오도록 한다.
+      target.closest("button") ||
+      target.closest("a") ||
+      target.closest("svg") ||
+      target.closest("input") ||
+      target.closest("textarea")
+    );
+  };
+
   const startPress = useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
-      e.preventDefault();
+      if (isInteractiveElement(e)) return;
 
+      e.preventDefault();
       isLongPressRef.current = false;
       timerRef.current = setTimeout(() => {
         onLongPress();
@@ -29,8 +43,9 @@ export const useLongPress = ({
 
   const endPress = useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
-      e.preventDefault();
+      if (isInteractiveElement(e)) return;
 
+      e.preventDefault();
       if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
@@ -43,8 +58,9 @@ export const useLongPress = ({
   );
 
   const cancelPress = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    e.preventDefault();
+    if (isInteractiveElement(e)) return;
 
+    e.preventDefault();
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
