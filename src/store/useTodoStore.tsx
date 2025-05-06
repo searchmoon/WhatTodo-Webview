@@ -11,11 +11,15 @@ export interface TodoState {
 interface TodoStore {
   todoList: TodoState[];
   setTodoList: (todoList: TodoState[]) => void;
+  selectedId: number | null;
+  setSelectedId: (selectedId: number) => void;
 }
 
 export const useTodoStore = create<TodoStore>((set) => {
   return {
     todoList: [],
     setTodoList: (todoList: TodoState[]) => set({ todoList: todoList }),
+    selectedId: null,
+    setSelectedId: (selectedId: number) => set({ selectedId: selectedId }),
   };
 });

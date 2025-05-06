@@ -6,9 +6,12 @@ import dayjs from "dayjs";
 import { Check, PencilLine, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LongPressWrapper from "../common/LongPressWrapper";
+import BottomSheets from "../common/BottomSheets";
+import { DrawerTrigger } from "../ui/drawer";
+import UpdateTodoContent from "../contents/bottomSheets/UpdateTodoContent";
 
 export default function TodoList() {
-  const { todoList, setTodoList } = useTodoStore();
+  const { todoList, setTodoList, setSelectedId } = useTodoStore();
   const { selectedDate } = useCalendarStore();
   const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -99,7 +102,7 @@ export default function TodoList() {
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
   const handleUpdateTodo = (todoId: number) => {
-    console.log(todoId);
+    setSelectedId(todoId);
   };
 
   return (
@@ -159,7 +162,16 @@ export default function TodoList() {
                             className="p-[2px]"
                             onClick={() => handleUpdateTodo(todo.id)}
                           >
-                            <PencilLine size="16" />
+                            <BottomSheets
+                              drawTrigger={
+                                <DrawerTrigger className="p-1 rounded-full bottom-0 right-0 cursor-pointer">
+                                  <PencilLine size="16" />
+                                </DrawerTrigger>
+                              }
+                              drawerContent={(onClose) => (
+                                <UpdateTodoContent onClose={onClose} />
+                              )}
+                            />
                           </button>
                         </div>
                       ) : (
