@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import LongPressWrapper from "../common/LongPressWrapper";
 import BottomSheets from "../common/BottomSheets";
 import { DrawerTrigger } from "../ui/drawer";
-import UpdateTodoContent from "../contents/bottomSheets/UpdateTodoContent";
+import TodoContent from "../contents/bottomSheets/TodoContent";
 
 export default function TodoList() {
   const { todoList, setTodoList, setSelectedId } = useTodoStore();
@@ -101,6 +101,7 @@ export default function TodoList() {
     setTodoList(newTodoList);
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
+
   const handleUpdateTodo = (todoId: number) => {
     setSelectedId(todoId);
   };
@@ -158,21 +159,19 @@ export default function TodoList() {
                           >
                             <Trash2 size="16" />
                           </button>
-                          <button
-                            className="p-[2px]"
-                            onClick={() => handleUpdateTodo(todo.id)}
-                          >
-                            <BottomSheets
-                              drawTrigger={
-                                <DrawerTrigger className="p-1 rounded-full bottom-0 right-0 cursor-pointer">
-                                  <PencilLine size="16" />
-                                </DrawerTrigger>
-                              }
-                              drawerContent={(onClose) => (
-                                <UpdateTodoContent onClose={onClose} />
-                              )}
-                            />
-                          </button>
+                          <BottomSheets
+                            drawTrigger={
+                              <DrawerTrigger
+                                className="p-[2px] rounded-full bottom-0 right-0 cursor-pointer"
+                                onClick={() => handleUpdateTodo(todo.id)}
+                              >
+                                <PencilLine size="16" />
+                              </DrawerTrigger>
+                            }
+                            drawerContent={(onClose) => (
+                              <TodoContent onClose={onClose} mode="update" />
+                            )}
+                          />
                         </div>
                       ) : (
                         <div className="min-w-4">

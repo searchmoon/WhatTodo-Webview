@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Plus } from "lucide-react";
-import CreateTodoContent from "../contents/bottomSheets/CreateTodoContent";
 import { useTodoStore } from "@/store/useTodoStore";
 import BottomSheets from "../common/BottomSheets";
 import { DrawerTrigger } from "../ui/drawer";
@@ -8,6 +7,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { DatePicker } from "./DatePicker";
 import TodoList from "./TodoList";
+import TodoContent from "../contents/bottomSheets/TodoContent";
 
 dayjs.locale("ko");
 
@@ -31,7 +31,9 @@ export default function Main() {
             <Plus color="#fff" size={24} />
           </DrawerTrigger>
         }
-        drawerContent={(onClose) => <CreateTodoContent onClose={onClose} />}
+        drawerContent={(onClose) => (
+          <TodoContent onClose={onClose} mode="create" />
+        )}
       />
     </div>
   );

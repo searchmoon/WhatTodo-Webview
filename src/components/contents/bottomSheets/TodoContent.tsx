@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowUp, CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import InputLine from "@/components/common/InputLine";
@@ -13,36 +13,55 @@ import { Switch } from "@/components/ui/switch";
 import { TodoState, useTodoStore } from "@/store/useTodoStore";
 import dayjs from "dayjs";
 
-const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
-  const { todoList, setTodoList } = useTodoStore();
+interface TodoContentProps {
+  mode?: "create" | "update";
+  onClose: () => void;
+}
 
-  const [newTodo, setNewTodo] = useState<TodoState>({
+const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
+  const { todoList, setTodoList, selectedId } = useTodoStore();
+
+  const selectedTodo = todoList.find((item) => item.id === selectedId);
+
+  const [todo, setTodo] = useState<TodoState>({
     todo: "",
     date: new Date(),
-    carryOver: true,
+    carryOver: false,
     id: 0,
     complete: false,
   });
 
-  const handleCreateTodo = () => {
-    if (newTodo.todo) {
-      setTodoList([...todoList, { ...newTodo, id: Date.now() }]);
-      localStorage.setItem(
-        "todoList",
-        JSON.stringify([...todoList, { ...newTodo, id: Date.now() }])
-      );
-      onClose();
-    } else {
-      alert("할일을 작성해 주세요.");
+  useEffect(() => {
+    if (mode === "update" && selectedTodo) {
+      setTodo(selectedTodo);
     }
+  }, [mode, selectedTodo]);
+
+  const handleSubmit = () => {
+    if (!todo.todo.trim()) {
+      return alert("할일을 작성해 주세요.");
+    }
+
+    let updatedList: TodoState[] = [];
+
+    if (mode === "create") {
+      const newItem = { ...todo, id: Date.now() };
+      updatedList = [...todoList, newItem];
+    } else if (mode === "update") {
+      updatedList = todoList.map((item) => (item.id === todo.id ? todo : item));
+    }
+
+    setTodoList(updatedList);
+    localStorage.setItem("todoList", JSON.stringify(updatedList));
+    onClose();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTodo({ ...newTodo, [e.target.id]: e.target.value });
+    setTodo({ ...todo, [e.target.id]: e.target.value });
   };
 
   const handleChangeSwitch = (checked: boolean) => {
-    setNewTodo({ ...newTodo, carryOver: checked });
+    setTodo({ ...todo, carryOver: checked });
   };
 
   return (
@@ -51,7 +70,7 @@ const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
         <InputLine
           onChange={handleChange}
           id="todo"
-          value={newTodo.todo}
+          value={todo.todo}
           placeholder="할 일을 작성해 주세요."
         />
       </div>
@@ -64,12 +83,12 @@ const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
             <button
               className={cn(
                 "flex items-center w-[280px] justify-start text-left font-normal border rounded-md p-2",
-                !newTodo.date && "text-muted-foreground"
+                !todo.date && "text-muted-foreground"
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {newTodo.date ? (
-                dayjs(newTodo.date).format("YYYY-MM-DD")
+              {todo.date ? (
+                dayjs(todo.date).format("YYYY-MM-DD")
               ) : (
                 <p>날짜를 선택하세요</p>
               )}
@@ -78,16 +97,12 @@ const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
           <PopoverContent className="w-auto p-0">
             <Calendar
               mode="single"
-              selected={newTodo.date}
+              selected={todo.date}
               onSelect={(selectedDate) => {
                 if (selectedDate) {
-                  setNewTodo((prev) => ({
-                    ...prev,
-                    date: selectedDate,
-                  }));
+                  setTodo((prev) => ({ ...prev, date: selectedDate }));
                 }
               }}
-              onDayFocus={() => console.log("focused")}
               initialFocus
             />
           </PopoverContent>
@@ -100,18 +115,19 @@ const CreateTodoContent = ({ onClose }: { onClose: () => void }) => {
         </Label>
         <Switch
           id="carry_over"
-          checked={newTodo.carryOver}
+          checked={todo.carryOver}
           onCheckedChange={handleChangeSwitch}
         />
       </div>
+
       <button
-        onClick={handleCreateTodo}
+        onClick={handleSubmit}
         className="bg-gray-400 p-2 rounded-full cursor-pointer"
       >
-        <ArrowUp color="#fff" />
+        {mode === "create" ? <ArrowUp color="#fff" /> : "수정"}
       </button>
     </div>
   );
 };
 
-export default CreateTodoContent;
+export default TodoContent;

@@ -1,8 +1,8 @@
 import BottomSheets from "@/components/common/BottomSheets";
+import TodoContent from "@/components/contents/bottomSheets/TodoContent";
 import { DrawerTrigger } from "@/components/ui/drawer";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Plus } from "lucide-react";
-import CreateTodoContent from "../components/contents/bottomSheets/CreateTodoContent";
 
 const meta: Meta<typeof BottomSheets> = {
   title: "Components/BottomSheets",
@@ -23,12 +23,10 @@ export const BottomSheet: Story = {
         <BottomSheets
           drawTrigger={
             <DrawerTrigger>
-              <button className="bg-gray-400 p-2 rounded-full absolute z-10 bottom-2 right-2 cursor-pointer">
-                <Plus color="#fff" />
-              </button>
+              <Plus color="#fff" />
             </DrawerTrigger>
           }
-          drawerContent={(onClose) => <CreateTodoContent onClose={onClose} />}
+          drawerContent={(onClose) => <TodoContent onClose={onClose} />}
         />
       </>
     );
