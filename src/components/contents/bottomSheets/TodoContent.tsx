@@ -78,7 +78,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
         <Label htmlFor="due_date" className="text-right">
           날짜
         </Label>
-        <Popover modal>
+        <Popover>
           <PopoverTrigger asChild>
             <button
               className={cn(
