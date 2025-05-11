@@ -5,10 +5,10 @@ import { formatGetDateLabel } from "@/util/format";
 import dayjs from "dayjs";
 import { Check, PencilLine, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import LongPressWrapper from "../common/LongPressWrapper";
 import BottomSheets from "../common/BottomSheets";
 import { DrawerTrigger } from "../ui/drawer";
 import TodoContent from "../contents/bottomSheets/TodoContent";
+import useLongPress from "@/hooks/useLongPress";
 
 export default function TodoList() {
   const { todoList, setTodoList, setSelectedId } = useTodoStore();
@@ -136,18 +136,21 @@ export default function TodoList() {
               {formatGetDateLabel(date)}
             </div>
             <ul className="space-y-2">
-              {todos.map((todo) => (
-                <LongPressWrapper
-                  key={todo.id}
-                  onLongPress={() => handlePressTodo(todo)}
-                  onClick={() => handleClickTodo(todo.id)}
-                >
+              {todos.map((todo) => {
+                const longPressEvents = useLongPress({
+                  onLongPress: () => handlePressTodo(todo),
+                  delay: 500,
+                  onClick: () => handleClickTodo(todo.id),
+                });
+
+                return (
                   <li
                     key={todo.id}
                     className={cn(
                       "px-3 py-1 bg-gray-50 rounded shadow-sm",
                       todo.complete ? "line-through text-gray-400" : ""
                     )}
+                    {...longPressEvents}
                   >
                     <div className="flex items-center justify-between">
                       {todo.todo}
@@ -180,8 +183,8 @@ export default function TodoList() {
                       )}
                     </div>
                   </li>
-                </LongPressWrapper>
-              ))}
+                );
+              })}
             </ul>
           </div>
         );

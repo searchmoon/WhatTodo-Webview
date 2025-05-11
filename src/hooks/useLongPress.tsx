@@ -1,66 +1,21 @@
 import { useRef, useCallback } from "react";
 
-interface UseLongPressOptions {
-  delay?: number;
+interface UseLongPressProp {
   onLongPress: () => void;
-  onClick: (e: React.MouseEvent) => void;
+  delay?: number; // 롱프레스 인식 시간 (ms)
+  onClick?: () => void;
 }
 
-export const useLongPress = ({
-  onLongPress,
-  delay = 500,
-  onClick,
-}: UseLongPressOptions) => {
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const isLongPressRef = useRef(false);
+function useLongPress({ onLongPress, delay = 500 }: UseLongPressProp) {
+  const timerRef = useRef<number | null>(null);
 
-  const isInteractiveElement = (e: any) => {
-    const target = e.target as HTMLElement;
+  const start = useCallback(() => {
+    timerRef.current = window.setTimeout(() => {
+      onLongPress();
+    }, delay);
+  }, [onLongPress, delay]);
 
-    return (
-      // 이런 요소일때 해당 이벤트는 무시하고 빠져나오도록 한다.
-      target.closest("button") ||
-      target.closest("a") ||
-      target.closest("svg") ||
-      target.closest("input") ||
-      target.closest("textarea")
-    );
-  };
-
-  const startPress = useCallback(
-    (e: React.TouchEvent | React.MouseEvent) => {
-      if (isInteractiveElement(e)) return;
-
-      e.preventDefault();
-      isLongPressRef.current = false;
-      timerRef.current = setTimeout(() => {
-        onLongPress();
-        isLongPressRef.current = true;
-      }, delay);
-    },
-    [onLongPress, delay]
-  );
-
-  const endPress = useCallback(
-    (e: React.TouchEvent | React.MouseEvent) => {
-      if (isInteractiveElement(e)) return;
-
-      e.preventDefault();
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
-      if (!isLongPressRef.current && onClick) {
-        onClick(e as React.MouseEvent);
-      }
-    },
-    [onClick]
-  );
-
-  const cancelPress = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    if (isInteractiveElement(e)) return;
-
-    e.preventDefault();
+  const clear = useCallback(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
@@ -68,11 +23,13 @@ export const useLongPress = ({
   }, []);
 
   return {
-    onTouchStart: startPress,
-    onTouchEnd: endPress,
-    onTouchMove: cancelPress,
-    onMouseDown: startPress,
-    onMouseUp: endPress,
-    onMouseLeave: cancelPress,
+    onMouseDown: start,
+    onMouseUp: clear,
+    onMouseLeave: clear,
+    onTouchStart: start,
+    onTouchEnd: clear,
+    onTouchCancel: clear,
   };
-};
+}
+
+export default useLongPress;
