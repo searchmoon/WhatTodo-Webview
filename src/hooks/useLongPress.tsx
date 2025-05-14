@@ -47,7 +47,6 @@ function useLongPress({
   return {
     onMouseDown: start,
     onMouseUp: clear,
-    // onMouseLeave: clear,
     onTouchStart: start,
     onTouchEnd: clear,
     onTouchCancel: clear,

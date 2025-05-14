@@ -5,6 +5,7 @@ import BottomSheets from "../common/BottomSheets";
 import { DrawerTrigger } from "../ui/drawer";
 import { Check, PencilLine, Trash2 } from "lucide-react";
 import TodoContent from "../contents/bottomSheets/TodoContent";
+import { useState } from "react";
 
 interface TodoItemProps {
   todo: TodoState;
@@ -23,12 +24,15 @@ export default function TodoItem({
   handleDeleteTodo,
   handleUpdateTodo,
 }: TodoItemProps) {
+  const [open, setOpen] = useState(false);
   const longPressEvents = useLongPress({
     onLongPress: () => handlePressTodo(todo),
     delay: 500,
     onClick: (e) => {
       e.preventDefault();
-      handleClickTodo(todo, e);
+      if (!open) {
+        handleClickTodo(todo, e);
+      }
     },
     todo: todo,
   });
@@ -70,6 +74,8 @@ export default function TodoItem({
               drawerContent={(onClose) => (
                 <TodoContent onClose={onClose} mode="update" />
               )}
+              open={open}
+              onOpenChange={setOpen}
             />
           </div>
         ) : (

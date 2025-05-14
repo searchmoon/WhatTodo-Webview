@@ -9,16 +9,28 @@ interface BottomSheetProp {
   drawTrigger: React.ReactNode;
   drawerContent: (onClose: () => void) => React.ReactNode;
   title?: string;
-  isClose?: boolean;
+  // isClose?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
+export default function BottomSheets({
+  drawTrigger,
+  drawerContent,
+  title,
+  open,
+  onOpenChange,
+}: BottomSheetProp) {
+  
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 
-function BottomSheets({ drawTrigger, drawerContent, title }: BottomSheetProp) {
-  const [open, setOpen] = useState(false);
+  const isControlled = open !== undefined && onOpenChange !== undefined;
+  const isOpen = isControlled ? open : uncontrolledOpen;
+  const setIsOpen = isControlled ? onOpenChange : setUncontrolledOpen;
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => setIsOpen(false);
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       {drawTrigger}
       <DrawerContent>
         <DrawerHeader>
@@ -29,5 +41,3 @@ function BottomSheets({ drawTrigger, drawerContent, title }: BottomSheetProp) {
     </Drawer>
   );
 }
-
-export default BottomSheets;
