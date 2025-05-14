@@ -19,9 +19,9 @@ interface TodoContentProps {
 }
 
 const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
-  const { todoList, setTodoList, selectedId } = useTodoStore();
+  const { todoList, setTodoList, currentTodo } = useTodoStore();
 
-  const selectedTodo = todoList.find((item) => item.id === selectedId);
+  const selectedTodo = todoList.find((item) => item.id === currentTodo?.id);
 
   const [todo, setTodo] = useState<TodoState>({
     todo: "",
@@ -32,7 +32,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
   });
 
   useEffect(() => {
-    if (mode === "update" && selectedTodo) {
+    if (mode === "update" && selectedTodo?.id !== todo.id && selectedTodo) {
       setTodo(selectedTodo);
     }
   }, [mode, selectedTodo]);
@@ -57,7 +57,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTodo({ ...todo, [e.target.id]: e.target.value });
+    setTodo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
   const handleChangeSwitch = (checked: boolean) => {

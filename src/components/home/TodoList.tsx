@@ -1,17 +1,12 @@
-import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/store/useCalendarStore";
 import { TodoState, useTodoStore } from "@/store/useTodoStore";
 import { formatGetDateLabel } from "@/util/format";
 import dayjs from "dayjs";
-import { Check, PencilLine, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import BottomSheets from "../common/BottomSheets";
-import { DrawerTrigger } from "../ui/drawer";
-import TodoContent from "../contents/bottomSheets/TodoContent";
-import useLongPress from "@/hooks/useLongPress";
+import TodoItem from "./TodoItem";
 
 export default function TodoList() {
-  const { todoList, setTodoList, setSelectedId } = useTodoStore();
+  const { todoList, setTodoList, setCurrentTodo } = useTodoStore();
   const { selectedDate } = useCalendarStore();
   const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -74,14 +69,11 @@ export default function TodoList() {
     }
   }, [noContentMsg]); // noContentMsg가 변경될 때마다 실행
 
-  const handleClickTodo = (todoId: number) => {
-    const newTodoList = todoList.map((todo) =>
-      todo.id === todoId ? { ...todo, complete: !todo.complete } : todo
+  const handleClickTodo = (todo: TodoState) => {
+    const newTodoList = todoList.map((item) =>
+      item.id === todo.id ? { ...item, complete: !item.complete } : item
     );
-
     setTodoList(newTodoList);
-    setSelectedTodo(null);
-
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
 
@@ -97,13 +89,12 @@ export default function TodoList() {
 
   const handleDeleteTodo = (todoId: number) => {
     const newTodoList = todoList.filter((item) => item.id !== todoId);
-    console.log(newTodoList);
     setTodoList(newTodoList);
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
 
-  const handleUpdateTodo = (todoId: number) => {
-    setSelectedId(todoId);
+  const handleUpdateTodo = (todo: TodoState) => {
+    setCurrentTodo(todo);
   };
 
   return (
@@ -136,55 +127,17 @@ export default function TodoList() {
               {formatGetDateLabel(date)}
             </div>
             <ul className="space-y-2">
-              {todos.map((todo) => {
-                const longPressEvents = useLongPress({
-                  onLongPress: () => handlePressTodo(todo),
-                  delay: 500,
-                  onClick: () => handleClickTodo(todo.id),
-                });
-
-                return (
-                  <li
-                    key={todo.id}
-                    className={cn(
-                      "px-3 py-1 bg-gray-50 rounded shadow-sm",
-                      todo.complete ? "line-through text-gray-400" : ""
-                    )}
-                    {...longPressEvents}
-                  >
-                    <div className="flex items-center justify-between">
-                      {todo.todo}
-                      {selectedTodo?.id === todo.id ? (
-                        <div className="flex items-center text-gray-400">
-                          <button
-                            className="p-[2px]"
-                            onClick={() => handleDeleteTodo(todo.id)}
-                          >
-                            <Trash2 size="16" />
-                          </button>
-                          <BottomSheets
-                            drawTrigger={
-                              <DrawerTrigger
-                                className="p-[2px] rounded-full bottom-0 right-0 cursor-pointer"
-                                onClick={() => handleUpdateTodo(todo.id)}
-                              >
-                                <PencilLine size="16" />
-                              </DrawerTrigger>
-                            }
-                            drawerContent={(onClose) => (
-                              <TodoContent onClose={onClose} mode="update" />
-                            )}
-                          />
-                        </div>
-                      ) : (
-                        <div className="min-w-4">
-                          {todo.complete && <Check size="16" />}
-                        </div>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
+              {todos.map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  selectedTodo={selectedTodo}
+                  handlePressTodo={handlePressTodo}
+                  handleClickTodo={handleClickTodo}
+                  handleDeleteTodo={handleDeleteTodo}
+                  handleUpdateTodo={handleUpdateTodo}
+                />
+              ))}
             </ul>
           </div>
         );
