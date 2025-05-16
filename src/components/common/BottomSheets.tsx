@@ -20,7 +20,6 @@ export default function BottomSheets({
   open,
   onOpenChange,
 }: BottomSheetProp) {
-  
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 
   const isControlled = open !== undefined && onOpenChange !== undefined;

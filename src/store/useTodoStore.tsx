@@ -11,16 +11,16 @@ export interface TodoState {
 interface TodoStore {
   todoList: TodoState[];
   setTodoList: (todoList: TodoState[]) => void;
-  currentTodo: TodoState | undefined;
-  setCurrentTodo: (currentTodo: TodoState) => void;
+  currentTodo: TodoState | undefined | null;
+  setCurrentTodo: (currentTodo: TodoState | undefined | null) => void;
 }
 
 export const useTodoStore = create<TodoStore>((set) => {
   return {
     todoList: [],
     setTodoList: (todoList: TodoState[]) => set({ todoList: todoList }),
-    currentTodo: undefined,
-    setCurrentTodo: (currentTodo: TodoState) =>
+    currentTodo: null,
+    setCurrentTodo: (currentTodo: TodoState | undefined | null) =>
       set({ currentTodo: currentTodo }),
   };
 });

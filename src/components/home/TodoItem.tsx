@@ -1,6 +1,6 @@
 import useLongPress from "@/hooks/useLongPress";
 import { cn } from "@/lib/utils";
-import { TodoState } from "@/store/useTodoStore";
+import { TodoState, useTodoStore } from "@/store/useTodoStore";
 import BottomSheets from "../common/BottomSheets";
 import { DrawerTrigger } from "../ui/drawer";
 import { Check, PencilLine, Trash2 } from "lucide-react";
@@ -9,7 +9,6 @@ import { useState } from "react";
 
 interface TodoItemProps {
   todo: TodoState;
-  selectedTodo: TodoState | null | undefined;
   handlePressTodo: (todo: TodoState) => void;
   handleClickTodo: (todo: TodoState, e: React.MouseEvent) => void;
   handleDeleteTodo: (todoId: number) => void;
@@ -18,19 +17,19 @@ interface TodoItemProps {
 
 export default function TodoItem({
   todo,
-  selectedTodo,
   handlePressTodo,
   handleClickTodo,
   handleDeleteTodo,
   handleUpdateTodo,
 }: TodoItemProps) {
   const [open, setOpen] = useState(false);
+  const { currentTodo } = useTodoStore();
   const longPressEvents = useLongPress({
     onLongPress: () => handlePressTodo(todo),
     delay: 500,
     onClick: (e) => {
       e.preventDefault();
-      if (!open) {
+      if (!currentTodo) {
         handleClickTodo(todo, e);
       }
     },
@@ -48,10 +47,10 @@ export default function TodoItem({
     >
       <div className="flex items-center justify-between">
         {todo.todo}
-        {selectedTodo?.id === todo.id ? (
+        {currentTodo?.id === todo.id ? (
           <div className="flex items-center text-gray-400">
             <button
-              className="p-[2px] no-propagation"
+              className="p-[2px] no-propagation cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDeleteTodo(todo.id);
@@ -63,8 +62,10 @@ export default function TodoItem({
               drawTrigger={
                 <DrawerTrigger
                   className="p-[2px] rounded-full bottom-0 right-0 cursor-pointer"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
                   onClick={(e) => {
-                    e.stopPropagation();
+                    e.stopPropagation(); 
                     handleUpdateTodo(todo);
                   }}
                 >

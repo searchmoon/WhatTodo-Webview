@@ -19,7 +19,7 @@ interface TodoContentProps {
 }
 
 const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
-  const { todoList, setTodoList, currentTodo } = useTodoStore();
+  const { todoList, setTodoList, currentTodo, setCurrentTodo } = useTodoStore();
 
   const selectedTodo = todoList.find((item) => item.id === currentTodo?.id);
 
@@ -52,6 +52,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
     }
 
     setTodoList(updatedList);
+    setCurrentTodo(null);
     localStorage.setItem("todoList", JSON.stringify(updatedList));
     onClose();
   };

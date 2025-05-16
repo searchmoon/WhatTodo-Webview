@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import TodoItem from "./TodoItem";
 
 export default function TodoList() {
-  const { todoList, setTodoList, setCurrentTodo } = useTodoStore();
+  const { todoList, setTodoList, setCurrentTodo, currentTodo } = useTodoStore();
   const { selectedDate } = useCalendarStore();
   const dateRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -77,13 +77,11 @@ export default function TodoList() {
     localStorage.setItem("todoList", JSON.stringify(newTodoList));
   };
 
-  const [selectedTodo, setSelectedTodo] = useState<TodoState | null>();
-
   const handlePressTodo = (todo: TodoState) => {
-    if (selectedTodo === todo) {
-      setSelectedTodo(null);
+    if (currentTodo === todo) {
+      setCurrentTodo(undefined);
     } else {
-      setSelectedTodo(todo);
+      setCurrentTodo(todo);
     }
   };
 
@@ -131,7 +129,6 @@ export default function TodoList() {
                 <TodoItem
                   key={todo.id}
                   todo={todo}
-                  selectedTodo={selectedTodo}
                   handlePressTodo={handlePressTodo}
                   handleClickTodo={handleClickTodo}
                   handleDeleteTodo={handleDeleteTodo}
