@@ -26,7 +26,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
   const [todo, setTodo] = useState<TodoState>({
     todo: "",
     date: new Date(),
-    carryOver: false,
+    carryOver: true,
     id: 0,
     complete: false,
   });
@@ -67,21 +67,23 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
 
   return (
     <div className="flex flex-col items-center gap-4 mb-10 px-4">
-      <div className="flex flex-col gap-3 w-full ">
+      <div className="flex flex-col w-full ">
         <Popover modal>
           <PopoverTrigger asChild>
             <button
               className={cn(
-                "flex items-center w-full justify-center text-left font-normal pl-2",
+                "flex items-center justify-start text-left font-normal px-3 ",
                 !todo.date && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {todo.date ? (
-                dayjs(todo.date).format("MM-DD (dd)")
-              ) : (
-                <p>날짜를 선택하세요</p>
-              )}
+              <div className="flex items-center border border-b-0 rounded-t-xl rounded-b-none pt-1 pb-0.5 px-2">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {todo.date ? (
+                  dayjs(todo.date).format("MM-DD (dd)")
+                ) : (
+                  <p>날짜를 선택하세요</p>
+                )}
+              </div>
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
@@ -97,7 +99,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
             />
           </PopoverContent>
         </Popover>
-        <div className="space-y-2">
+        <div className="space-y-0 mb-4">
           <div className="relative">
             <Input
               id="todo"
@@ -113,13 +115,17 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-400 hover:bg-gray-600 transition-colors p-1 rounded-full cursor-pointer h-fit"
               disabled={!todo.todo.trim() || !todo.date}
             >
-              {mode === "create" ? <ArrowUp size="20" color="#fff" /> : "수정"}
+              {mode === "create" ? (
+                <ArrowUp size="20" color="#fff" />
+              ) : (
+                <span className="text-white px-1">수정</span>
+              )}
             </button>
           </div>
         </div>
         <div className="flex items-center justify-center gap-4">
           <Label htmlFor="carry_over" className="text-right">
-            다음날로 일정 넘기기
+            일정 미루기 허용
           </Label>
           <Switch
             id="carry_over"

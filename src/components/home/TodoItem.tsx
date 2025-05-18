@@ -29,9 +29,7 @@ export default function TodoItem({
     delay: 500,
     onClick: (e) => {
       e.preventDefault();
-      if (!currentTodo) {
-        handleClickTodo(todo, e);
-      }
+      handleClickTodo(todo, e);
     },
     todo: todo,
   });
@@ -65,7 +63,7 @@ export default function TodoItem({
                   onMouseDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
                   onClick={(e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     handleUpdateTodo(todo);
                   }}
                 >
