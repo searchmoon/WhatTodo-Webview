@@ -31,7 +31,7 @@ export default function BottomSheets({
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       {drawTrigger}
-      <DrawerContent>
+      <DrawerContent className="no-propagation">
         <DrawerHeader className="p-3">
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>

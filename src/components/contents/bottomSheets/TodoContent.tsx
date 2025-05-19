@@ -112,7 +112,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
             />
             <button
               onClick={handleSubmit}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-400 hover:bg-gray-600 transition-colors p-1 rounded-full cursor-pointer h-fit"
+              className="no-propagation absolute right-2 top-1/2 -translate-y-1/2 bg-gray-400 hover:bg-gray-600 transition-colors p-1 rounded-full cursor-pointer h-fit"
               disabled={!todo.todo.trim() || !todo.date}
             >
               {mode === "create" ? (

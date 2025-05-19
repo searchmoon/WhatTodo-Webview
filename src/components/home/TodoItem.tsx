@@ -23,13 +23,15 @@ export default function TodoItem({
   handleUpdateTodo,
 }: TodoItemProps) {
   const [open, setOpen] = useState(false);
-  const { currentTodo } = useTodoStore();
+  const { currentTodo, setCurrentTodo } = useTodoStore();
   const longPressEvents = useLongPress({
     onLongPress: () => handlePressTodo(todo),
     delay: 500,
     onClick: (e) => {
-      e.preventDefault();
+      const el = e.target as HTMLElement;
+      if (el.closest(".no-propagation")) return;
       handleClickTodo(todo, e);
+      setCurrentTodo(null);
     },
     todo: todo,
   });
