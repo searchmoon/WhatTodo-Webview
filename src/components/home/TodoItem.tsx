@@ -11,7 +11,10 @@ import dayjs from "dayjs";
 interface TodoItemProps {
   todo: TodoState;
   handlePressTodo: (todo: TodoState) => void;
-  handleClickTodo: (todo: TodoState, e: React.MouseEvent) => void;
+  handleClickTodo: (
+    todo: TodoState,
+    e: React.MouseEvent | React.TouchEvent
+  ) => void;
   handleDeleteTodo: (todoId: number) => void;
   handleUpdateTodo: (todo: TodoState) => void;
 }

@@ -4,7 +4,7 @@ import { TodoState } from "@/store/useTodoStore";
 interface UseLongPressProp {
   onLongPress: (todo: TodoState) => void;
   delay?: number;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent | React.TouchEvent) => void;
   todo: TodoState;
 }
 
@@ -19,7 +19,11 @@ function useLongPress({
 
   const start = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
+      if ("touches" in e && e.cancelable) {
+        e.preventDefault(); // prevent ghost click
+      }
       e.stopPropagation();
+
       longPressedRef.current = false;
       timerRef.current = window.setTimeout(() => {
         longPressedRef.current = true;
@@ -31,14 +35,18 @@ function useLongPress({
 
   const clear = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
+      if ("touches" in e && e.cancelable) {
+        e.preventDefault();
+      }
       e.stopPropagation();
+
       if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
-      // 롱프레스가 아니면 onClick 실행
+
       if (!longPressedRef.current && onClick) {
-        onClick(e as React.MouseEvent);
+        onClick(e as React.MouseEvent | React.TouchEvent);
       }
     },
     [onClick]
