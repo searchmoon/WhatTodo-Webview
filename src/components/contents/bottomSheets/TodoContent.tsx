@@ -86,7 +86,7 @@ const TodoContent = ({ mode = "create", onClose }: TodoContentProps) => {
               </div>
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0 no-propagation">
             <Calendar
               mode="single"
               selected={todo.date}

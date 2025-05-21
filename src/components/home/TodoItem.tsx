@@ -6,6 +6,7 @@ import { DrawerTrigger } from "../ui/drawer";
 import { Check, PencilLine, Trash2 } from "lucide-react";
 import TodoContent from "../contents/bottomSheets/TodoContent";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 interface TodoItemProps {
   todo: TodoState;
@@ -36,17 +37,25 @@ export default function TodoItem({
     todo: todo,
   });
 
+  const daysDiff = dayjs().diff(dayjs(todo.date), "day");
+
   return (
     <li
       key={todo.id}
       className={cn(
         "px-3 py-1 bg-gray-50 rounded shadow-sm",
-        todo.complete ? "line-through text-gray-400" : ""
+        todo.complete ? "line-through text-gray-400" : "",
+        dayjs(todo.date).isBefore(dayjs().startOf("day"), "day") &&
+          !todo.complete &&
+          "text-gray-500"
       )}
       {...longPressEvents}
     >
       <div className="flex items-center justify-between">
         {todo.todo}
+        <span className="text-sm text-gray-600 ml-auto">
+          {daysDiff > 0 && !todo.complete && `+${daysDiff}days`}
+        </span>
         {currentTodo?.id === todo.id ? (
           <div className="flex items-center text-gray-400">
             <button
