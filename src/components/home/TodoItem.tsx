@@ -43,7 +43,7 @@ export default function TodoItem({
     <li
       key={todo.id}
       className={cn(
-        "px-3 py-1 bg-gray-50 rounded shadow-sm",
+        "px-3 py-1 bg-gray-50 rounded shadow-sm select-none",
         todo.complete ? "line-through text-gray-400" : "",
         dayjs(todo.date).isBefore(dayjs().startOf("day"), "day") &&
           !todo.complete &&
@@ -52,9 +52,12 @@ export default function TodoItem({
       {...longPressEvents}
     >
       <div className="flex items-center justify-between">
-        {todo.todo}
+        <span>{todo.todo}</span>
         <span className="text-sm text-gray-600 ml-auto">
-          {daysDiff > 0 && !todo.complete && `+${daysDiff}days`}
+          {daysDiff > 0 &&
+            !todo.complete &&
+            currentTodo !== todo &&
+            `+${daysDiff}days`}
         </span>
         {currentTodo?.id === todo.id ? (
           <div className="flex items-center text-gray-400">
