@@ -67,11 +67,8 @@ function useLongPress({
   );
 
   return {
-    onMouseDown: start,
-    onMouseUp: clear,
-    onTouchStart: start,
-    onTouchEnd: clear,
-    onTouchCancel: clear,
+    onPointerDown: start,
+    onPointerUp: clear,
   };
 }
 
