@@ -83,6 +83,7 @@ export default function TodoList() {
     } else {
       setCurrentTodo(todo);
     }
+    console.log(currentTodo);
   };
 
   const handleDeleteTodo = (todoId: number) => {
