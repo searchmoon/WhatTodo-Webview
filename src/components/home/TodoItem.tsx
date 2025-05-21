@@ -76,7 +76,7 @@ export default function TodoItem({
             <BottomSheets
               drawTrigger={
                 <DrawerTrigger
-                  className="p-[2px] rounded-full bottom-0 right-0 cursor-pointer"
+                  className="no-propagation p-[2px] rounded-full bottom-0 right-0 cursor-pointer"
                   onMouseDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
                   onClick={(e) => {

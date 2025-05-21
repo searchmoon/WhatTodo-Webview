@@ -19,6 +19,9 @@ function useLongPress({
 
   const start = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
+      const el = e.target as HTMLElement;
+      if (el.closest(".no-propagation")) return;
+
       if ("touches" in e && e.cancelable) {
         e.preventDefault(); // prevent ghost click
       }
@@ -35,6 +38,9 @@ function useLongPress({
 
   const clear = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
+      const el = e.target as HTMLElement;
+      if (el.closest(".no-propagation")) return;
+
       if ("touches" in e && e.cancelable) {
         e.preventDefault();
       }
