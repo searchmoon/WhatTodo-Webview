@@ -70,6 +70,10 @@ export default function TodoItem({
                 e.stopPropagation();
                 handleDeleteTodo(todo.id);
               }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+                handleDeleteTodo(todo.id);
+              }}
             >
               <Trash2 size="16" />
             </button>
@@ -78,7 +82,10 @@ export default function TodoItem({
                 <DrawerTrigger
                   className="no-propagation p-[2px] rounded-full bottom-0 right-0 cursor-pointer"
                   onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    handleUpdateTodo(todo);
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleUpdateTodo(todo);
