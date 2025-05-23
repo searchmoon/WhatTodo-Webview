@@ -1,54 +1,33 @@
-# React + TypeScript + Vite
+## 프로젝트 이름
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+WhatTodo-webview
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 할 일 추가 / 수정 / 삭제
+- 할 일 완료 체크
+- 날짜, 월별로 할 일 분리
+- 모바일 대응 UI
 
-## Expanding the ESLint configuration
+## 실행환경
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+React + TypeScript + Vite
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 배포 링크
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+[https://webview-todo-stamp.vercel.app/](https://webview-todo-stamp.vercel.app/)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 기술 스택
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- React + Typescript
+- Zustand (상태관리)
+- TailwindCSS + shadcn/ui (스타일링)
+- Vite (빌드 도구)
+- Vercel (배포)
+
+## 설치 및 실행 방법
+
+git clone https://github.com/searchmoon/WhatTodo-Webview
+cd WhatTodo-Webview
+pnpm install
+pnpm run dev

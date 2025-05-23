@@ -156,8 +156,9 @@ export function DatePicker() {
               variant="ghost"
               className={cn(
                 "h-8 w-8 p-0 font-normal flex-shrink-0",
-                isSelected(day) && "bg-primary text-primary-foreground",
-                !isSelected(day) && "hover:bg-muted"
+                isSelected(day)
+                  ? "bg-gray-500 text-white hover:bg-gray-200"
+                  : "bg-gray-100 text-gray-700 hover:bg-muted"
               )}
               onClick={() => handleDateSelect(day)}
             >
